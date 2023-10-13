@@ -27,6 +27,7 @@ import android.view.ViewGroup
 import android.widget.TextView
 import android.widget.Toast
 import androidx.annotation.*
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
@@ -39,6 +40,9 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import xh.rabbit.core.network.RemoteRequestStrategy
 import xh.rabbit.core.vo.ApiResponse
+import xh.rabbit.core.vo.Resource
+import xh.rabbit.core.vo.Status
+import xh.rabbit.core.widgets.NetworkStateLayout
 
 /**
  * Implementation of lazy that is not thread safe. Useful when you know what thread you will be
@@ -249,13 +253,29 @@ inline fun <T> BaseRepository.remoteRequestStrategy(
     override fun createCall(): LiveData<ApiResponse<T>> = f()
 }.asLiveData()
 
-/**
- * Helper to throw exceptions only in Debug builds, logging a warning otherwise.
- */
-//fun exceptionInDebug(t: Throwable) {
-//    if (BuildConfig.DEBUG) {
-//        throw t
-//    } else {
-//        Timber.e(t)
-//    }
-//}
+inline fun <T> Resource<T>.handleStatus(
+    loadingDialog: AlertDialog? = null,
+    networkLayout: NetworkStateLayout? = null,
+    success: (T?) -> Unit,
+    failure: (String?) -> Unit
+) {
+    networkLayout?.networkStatus(status)
+    if (status == Status.LOADING) {
+        loadingDialog?.show()
+    } else {
+        loadingDialog?.dismiss()
+    }
+    when (status) {
+        Status.LOADING -> {
+
+        }
+        Status.SUCCESS -> {
+            success(data)
+        }
+        Status.ERROR -> {
+            failure(message)
+        }
+    }
+}
+
+

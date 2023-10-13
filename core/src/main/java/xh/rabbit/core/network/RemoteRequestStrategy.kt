@@ -8,7 +8,8 @@ import xh.rabbit.core.vo.Resource
 import java.util.*
 
 /**
- * 纯网络请求策略，无缓存
+ * 转换器
+ * ApiResponse -> Resource
  */
 abstract class RemoteRequestStrategy<ResultType>() {
 
@@ -24,10 +25,8 @@ abstract class RemoteRequestStrategy<ResultType>() {
         result.addSource(apiResponse) { response ->
             result.removeSource(apiResponse)
             if (response?.isSuccessful()!!) {
-//                onResponse(response)
                 setValue(Resource.success(response.body))
             } else {
-//                onFetchFailed(response.error!!)
                 setValue(Resource.error(response.error!!, response.body))
             }
         }
@@ -44,9 +43,4 @@ abstract class RemoteRequestStrategy<ResultType>() {
 
     @MainThread
     protected abstract fun createCall(): LiveData<ApiResponse<ResultType>>
-
-//    protected abstract fun onFetchFailed(error: String)
-
-    // 该方法提供请求成功时处理响应数据的机会
-//    protected abstract fun onResponse(response: ApiResponse<ResultType>)
 }

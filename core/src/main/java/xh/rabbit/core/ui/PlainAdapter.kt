@@ -5,8 +5,11 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 
-abstract class PlainListAdapter<T>(private var _items: List<T>) :
-    RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+abstract class PlainAdapter<T>(
+    private var _items: ArrayList<T>
+) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+
+    var selection = 0
 
     class ItemViewHolder(v: View) : RecyclerView.ViewHolder(v)
 
@@ -23,10 +26,23 @@ abstract class PlainListAdapter<T>(private var _items: List<T>) :
         bindView(v, item, position)
     }
 
-    open fun updateData(data: List<T>) {
+    protected fun isSelected(position: Int) = position == selection
+
+    protected fun notifySelection(position: Int) {
+        if (selection != position) {
+            val pos = selection
+            selection = position
+            notifyItemChanged(selection)
+            notifyItemChanged(pos)
+        }
+    }
+
+    open fun updateData(data: ArrayList<T>) {
         _items = data
         notifyDataSetChanged()
     }
+
+    fun getData(): ArrayList<T> = _items
 
     abstract fun itemLayoutId(): Int
 
