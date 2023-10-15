@@ -239,43 +239,6 @@ fun Context.showToast(msg: String, gravity: Int? = null, x: Int = 0, y: Int = 0)
     toast.show()
 }
 
-/**
- * 网络请求策略
- *
- * 对于Repository里面的load方法, 可以写成下面的形式
- * ```
- * fun loadFunction() = networkRequestStrategy { function() : LiveData<ApiResponse<T>> }
- * ```
- */
-inline fun <T> BaseRepository.remoteRequestStrategy(
-    crossinline f: () -> LiveData<ApiResponse<T>>
-) = object : RemoteRequestStrategy<T>() {
-    override fun createCall(): LiveData<ApiResponse<T>> = f()
-}.asLiveData()
 
-inline fun <T> Resource<T>.handleStatus(
-    loadingDialog: AlertDialog? = null,
-    networkLayout: NetworkStateLayout? = null,
-    success: (T?) -> Unit,
-    failure: (String?) -> Unit
-) {
-    networkLayout?.networkStatus(status)
-    if (status == Status.LOADING) {
-        loadingDialog?.show()
-    } else {
-        loadingDialog?.dismiss()
-    }
-    when (status) {
-        Status.LOADING -> {
-
-        }
-        Status.SUCCESS -> {
-            success(data)
-        }
-        Status.ERROR -> {
-            failure(message)
-        }
-    }
-}
 
 

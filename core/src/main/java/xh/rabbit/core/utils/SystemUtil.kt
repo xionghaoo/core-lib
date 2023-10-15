@@ -215,11 +215,11 @@ class SystemUtil {
         }
 
         fun toFullScreenMode(activity: AppCompatActivity) {
-            activity.requestWindowFeature(Window.FEATURE_NO_TITLE);
+            activity.requestWindowFeature(Window.FEATURE_NO_TITLE)
             activity.window.setFlags(
                     WindowManager.LayoutParams.FLAG_FULLSCREEN,
                     WindowManager.LayoutParams.FLAG_FULLSCREEN,
-            );
+            )
             val flags = (View.SYSTEM_UI_FLAG_LAYOUT_STABLE
                     or View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
                     or View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
