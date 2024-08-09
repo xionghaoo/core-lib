@@ -1,5 +1,7 @@
 package xh.rabbit.core.utils
 
+import android.content.Context
+import android.media.MediaPlayer
 import java.io.File
 import java.io.FileInputStream
 import java.io.FileOutputStream
@@ -9,6 +11,21 @@ import java.io.OutputStream
 
 class AudioUtil {
     companion object {
+
+        fun playWav(context: Context, audio: Int) {
+            val mp = MediaPlayer.create(context, audio)
+            mp.start()
+        }
+
+        fun playUrl(url: String) {
+            val mp = MediaPlayer()
+            mp.setDataSource(url)
+            mp.setOnPreparedListener { m ->
+                m.start()
+            }
+            mp.prepareAsync()
+        }
+
         /**
          * @param input         raw PCM data
          * limit of file size for wave file: < 2^(2*4) - 36 bytes (~4GB)

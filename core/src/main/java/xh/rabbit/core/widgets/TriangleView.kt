@@ -80,7 +80,7 @@ class TriangleView : View {
         }
     }
 
-    override fun onDraw(canvas: Canvas?) {
+    override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
         val topPadding = paddingTop
         val bottomPadding = paddingBottom
@@ -105,8 +105,8 @@ class TriangleView : View {
                 path.lineTo(lineWidth, 0f)
                 path.close()
 
-                canvas?.drawPath(pathFill, paintFill)
-                canvas?.drawPath(path, paint)
+                canvas.drawPath(pathFill, paintFill)
+                canvas.drawPath(path, paint)
             }
             Direction.TOP -> {
                 pathFill.reset()
@@ -126,8 +126,8 @@ class TriangleView : View {
                 path.lineTo(0f, height)
                 path.close()
 
-                canvas?.drawPath(pathFill, paintFill)
-                canvas?.drawPath(path, paint)
+                canvas.drawPath(pathFill, paintFill)
+                canvas.drawPath(path, paint)
             }
             else -> {}
         }

@@ -8,11 +8,10 @@ group = 'com.github.xionghaoo'
 
 android {
     namespace 'xh.rabbit.core'
-    compileSdk 33
+    compileSdk 34
 
     defaultConfig {
         minSdk 26
-        targetSdk 33
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles "consumer-rules.pro"
@@ -30,6 +29,10 @@ android {
     }
     kotlinOptions {
         jvmTarget = JavaVersion.VERSION_17.toString()
+    }
+    buildFeatures {
+        viewBinding true
+        buildConfig true
     }
 }
 
@@ -58,7 +61,7 @@ afterEvaluate {
                 // You can then customize attributes of the publication as shown below.
                 groupId = 'xh.rabbit.core'
                 artifactId = 'core'
-                version = '0.0.2'
+                version = '0.0.1'
             }
         }
     }

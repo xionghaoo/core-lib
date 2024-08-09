@@ -18,6 +18,9 @@ package xh.rabbit.core
 
 import android.content.Context
 import android.content.Intent
+import android.content.res.Configuration
+import android.graphics.Bitmap
+import android.graphics.Canvas
 import android.os.Bundle
 import android.os.Parcel
 import android.util.TypedValue
@@ -229,6 +232,9 @@ fun <T> List<T>.toArrayList() : ArrayList<T> {
     return arr
 }
 
+fun Context.isPortrait() = resources.configuration.orientation == Configuration.ORIENTATION_PORTRAIT
+fun Context.isLandscape() = resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE
+
 fun View.assignText(@IdRes viewId: Int, text: String?) {
     this.findViewById<TextView>(viewId).text = text
 }
@@ -239,6 +245,70 @@ fun Context.showToast(msg: String, gravity: Int? = null, x: Int = 0, y: Int = 0)
     toast.show()
 }
 
+/**
+ * 视图转成Bitmap
+ *
+ * @return
+ */
+fun View.toBitmap(): Bitmap {
+    val v = this
+    if (v.measuredHeight <= 0) {
+        v.measure(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT)
+        val b = Bitmap.createBitmap(v.measuredWidth, v.measuredHeight, Bitmap.Config.ARGB_8888)
+        val c = Canvas(b)
+        v.layout(0, 0, v.measuredWidth, v.measuredHeight)
+        v.draw(c)
+        return b
+    } else {
+        val b = Bitmap.createBitmap(
+            v.measuredWidth,
+            v.measuredHeight,
+            Bitmap.Config.ARGB_8888
+        )
+        val c = Canvas(b)
+        v.layout(v.left, v.top, v.right, v.bottom)
+        v.draw(c)
+        return b
+    }
+}
 
+/**
+ * 网络请求策略
+ *
+ * 对于Repository里面的load方法, 可以写成下面的形式
+ * ```
+ * fun loadFunction() = networkRequestStrategy { function() : LiveData<ApiResponse<T>> }
+ * ```
+ */
+inline fun <T> BaseRepository.remoteRequestStrategy(
+    crossinline f: () -> LiveData<ApiResponse<T>>
+) = object : RemoteRequestStrategy<T>() {
+    override fun createCall(): LiveData<ApiResponse<T>> = f()
+}.asLiveData()
+
+inline fun <T> Resource<T>.handleStatus(
+    loadingDialog: AlertDialog? = null,
+    networkLayout: NetworkStateLayout? = null,
+    success: (T?) -> Unit,
+    failure: (String?) -> Unit
+) {
+    networkLayout?.networkStatus(status)
+    if (status == Status.LOADING) {
+        loadingDialog?.show()
+    } else {
+        loadingDialog?.dismiss()
+    }
+    when (status) {
+        Status.LOADING -> {
+
+        }
+        Status.SUCCESS -> {
+            success(data)
+        }
+        Status.ERROR -> {
+            failure(message)
+        }
+    }
+}
 
 
