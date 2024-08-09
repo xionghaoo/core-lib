@@ -18,6 +18,9 @@ package xh.rabbit.core
 
 import android.content.Context
 import android.content.Intent
+import android.content.res.Configuration
+import android.graphics.Bitmap
+import android.graphics.Canvas
 import android.os.Bundle
 import android.os.Parcel
 import android.util.TypedValue
@@ -229,6 +232,9 @@ fun <T> List<T>.toArrayList() : ArrayList<T> {
     return arr
 }
 
+fun Context.isPortrait() = resources.configuration.orientation == Configuration.ORIENTATION_PORTRAIT
+fun Context.isLandscape() = resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE
+
 fun View.assignText(@IdRes viewId: Int, text: String?) {
     this.findViewById<TextView>(viewId).text = text
 }
@@ -237,6 +243,33 @@ fun Context.showToast(msg: String, gravity: Int? = null, x: Int = 0, y: Int = 0)
     val toast = Toast.makeText(this, msg, Toast.LENGTH_SHORT)
     gravity?.also { toast.setGravity(it, x, y) }
     toast.show()
+}
+
+/**
+ * 视图转成Bitmap
+ *
+ * @return
+ */
+fun View.toBitmap(): Bitmap {
+    val v = this
+    if (v.measuredHeight <= 0) {
+        v.measure(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT)
+        val b = Bitmap.createBitmap(v.measuredWidth, v.measuredHeight, Bitmap.Config.ARGB_8888)
+        val c = Canvas(b)
+        v.layout(0, 0, v.measuredWidth, v.measuredHeight)
+        v.draw(c)
+        return b
+    } else {
+        val b = Bitmap.createBitmap(
+            v.measuredWidth,
+            v.measuredHeight,
+            Bitmap.Config.ARGB_8888
+        )
+        val c = Canvas(b)
+        v.layout(v.left, v.top, v.right, v.bottom)
+        v.draw(c)
+        return b
+    }
 }
 
 /**

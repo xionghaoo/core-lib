@@ -23,5 +23,6 @@ internal class Logger {
         fun e(msg: Throwable) {
             Log.e(TAG, msg.localizedMessage ?: "")
         }
+
     }
 }
