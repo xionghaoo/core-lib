@@ -12,24 +12,22 @@ import java.util.concurrent.atomic.AtomicBoolean
 /**
  * LiveData 转换器，将retrofit的response转换成LiveData<ApiResponse<T>>的形式
  */
-class LiveDataCallAdapter<R>(val type: Type) : CallAdapter<R, LiveData<ApiResponse<R>>> {
+class LiveDataCallAdapter<R>(private val type: Type) : CallAdapter<R, LiveData<ApiResponse<R>>> {
 
 
-    override fun adapt(call: Call<R>?): LiveData<ApiResponse<R>> =
+    override fun adapt(call: Call<R>): LiveData<ApiResponse<R>> =
         object : LiveData<ApiResponse<R>>() {
             val started: AtomicBoolean = AtomicBoolean(false)
 
             override fun onActive() {
                 super.onActive()
                 if (started.compareAndSet(false, true)) {
-                    call?.enqueue(object : Callback<R> {
-                        override fun onResponse(call: Call<R>?, response: Response<R>?) {
-                            if (response != null) {
-                                postValue(ApiResponse<R>(response))
-                            }
+                    call.enqueue(object : Callback<R> {
+                        override fun onResponse(call: Call<R>, response: Response<R>) {
+                            postValue(ApiResponse<R>(response))
                         }
 
-                        override fun onFailure(call: Call<R>?, t: Throwable?) {
+                        override fun onFailure(call: Call<R>, t: Throwable) {
                             postValue(ApiResponse<R>(t))
                         }
                     })

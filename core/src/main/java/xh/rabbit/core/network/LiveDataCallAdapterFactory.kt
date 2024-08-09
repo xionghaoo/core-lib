@@ -11,11 +11,11 @@ import java.lang.reflect.Type
 
 class LiveDataCallAdapterFactory : CallAdapter.Factory() {
     override fun get(
-        returnType: Type?,
-        annotations: Array<out Annotation>?,
-        retrofit: Retrofit?
+        returnType: Type,
+        annotations: Array<out Annotation>,
+        retrofit: Retrofit
     ): CallAdapter<*, *>? {
-        if (getRawType(returnType!!) != LiveData::class.java) {
+        if (getRawType(returnType) != LiveData::class.java) {
             return null
         }
         val observableType = getParameterUpperBound(0, returnType as ParameterizedType)
