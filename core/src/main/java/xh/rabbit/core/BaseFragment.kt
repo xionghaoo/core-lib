@@ -10,7 +10,7 @@ import android.view.WindowManager
 import android.view.inputmethod.InputMethodManager
 import androidx.fragment.app.Fragment
 
-abstract class BaseFragment<VIEW> : Fragment() {
+abstract class BaseFragment<out VIEW> : Fragment() {
 
     private var _binding: VIEW? = null
     protected val binding get() = _binding!!
