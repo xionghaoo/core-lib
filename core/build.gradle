@@ -41,6 +41,10 @@ dependencies {
     implementation libs.androidx.core.ktx
     implementation libs.androidx.appcompat
     implementation libs.material
+    implementation libs.fragment.ktx
+    implementation libs.navigation.fragment
+    implementation libs.navigation.ui
+
     implementation libs.androidx.constraintlayout
     implementation 'com.beust:klaxon:5.5'
     implementation "com.squareup.okhttp3:okhttp:4.12.0"
