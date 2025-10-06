@@ -1,5 +1,6 @@
 package xh.rabbit.core.ui
 
+import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -7,7 +8,7 @@ import androidx.recyclerview.widget.RecyclerView
 import xh.rabbit.core.setDebouncedClickListener
 
 abstract class PlainAdapter<T>(
-    private var _items: ArrayList<T>
+    private var _items: ArrayList<T> = arrayListOf()
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     private var listener: ((T, Int) -> Unit)? = null
@@ -45,6 +46,7 @@ abstract class PlainAdapter<T>(
         }
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     open fun updateData(data: ArrayList<T>) {
         _items = data
         notifyDataSetChanged()
