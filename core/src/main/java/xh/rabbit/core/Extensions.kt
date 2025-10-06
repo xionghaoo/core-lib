@@ -24,6 +24,7 @@ import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.os.Bundle
 import android.os.Parcel
+import android.os.SystemClock
 import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
@@ -45,6 +46,8 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import xh.rabbit.core.network.RemoteRequestStrategy
+import xh.rabbit.core.ui.DEFAULT_CLICK_INTERVAL_MS
+import xh.rabbit.core.ui.DebouncedOnClickListener
 import xh.rabbit.core.vo.ApiResponse
 import xh.rabbit.core.vo.Resource
 import xh.rabbit.core.vo.Status
@@ -274,3 +277,14 @@ fun View.toBitmap(): Bitmap {
         return b
     }
 }
+
+/**
+ * 防抖点击监听器
+ */
+fun View.setDebouncedClickListener(
+    intervalMs: Long = DEFAULT_CLICK_INTERVAL_MS,
+    onClick: (View) -> Unit
+): Unit {
+    this.setOnClickListener(DebouncedOnClickListener(intervalMs, onClick))
+}
+

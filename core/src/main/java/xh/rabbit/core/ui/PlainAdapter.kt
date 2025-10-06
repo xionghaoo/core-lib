@@ -4,10 +4,13 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import xh.rabbit.core.setDebouncedClickListener
 
 abstract class PlainAdapter<T>(
     private var _items: ArrayList<T>
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+
+    private var listener: ((T, Int) -> Unit)? = null
 
     var selection = 0
 
@@ -23,6 +26,11 @@ abstract class PlainAdapter<T>(
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         val item = _items[position]
         val v = holder.itemView
+        listener?.let { click ->
+            (clickView(v) ?: v).setDebouncedClickListener {
+                click(item, position)
+            }
+        }
         bindView(v, item, position)
     }
 
@@ -43,8 +51,13 @@ abstract class PlainAdapter<T>(
     }
 
     fun getData(): ArrayList<T> = _items
+    open fun clickView(parent: View): View? = null
 
     abstract fun itemLayoutId(): Int
 
     abstract fun bindView(v: View, item: T, position: Int)
+
+    fun setOnItemClickListener(onClick: (T, Int) -> Unit) {
+        listener = onClick
+    }
 }
