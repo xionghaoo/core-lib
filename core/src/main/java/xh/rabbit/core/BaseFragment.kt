@@ -34,8 +34,4 @@ abstract class BaseFragment<out VIEW: ViewBinding> : Fragment() {
         _binding = null
     }
 
-    protected fun hideKeyboard() {
-
-    }
-
 }

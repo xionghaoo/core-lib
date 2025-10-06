@@ -8,14 +8,14 @@ import androidx.recyclerview.widget.RecyclerView
 import xh.rabbit.core.setDebouncedClickListener
 
 abstract class PlainAdapter<T>(
-    private var _items: ArrayList<T> = arrayListOf()
+    private val _items: ArrayList<T>
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     private var listener: ((T, Int) -> Unit)? = null
 
     var selection = 0
 
-    class ItemViewHolder(v: View) : RecyclerView.ViewHolder(v)
+    private class ItemViewHolder(v: View) : RecyclerView.ViewHolder(v)
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         val inflater = LayoutInflater.from(parent.context)
@@ -48,7 +48,8 @@ abstract class PlainAdapter<T>(
 
     @SuppressLint("NotifyDataSetChanged")
     open fun updateData(data: ArrayList<T>) {
-        _items = data
+        _items.clear()
+        _items.addAll(data)
         notifyDataSetChanged()
     }
 
