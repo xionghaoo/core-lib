@@ -288,3 +288,12 @@ fun View.setDebouncedClickListener(
     this.setOnClickListener(DebouncedOnClickListener(intervalMs, onClick))
 }
 
+fun String.isChinese(): Boolean {
+    val chinesePattern = Regex("[\u4e00-\u9fff]+")
+    return chinesePattern.containsMatchIn(this)
+}
+
+fun String.isEnglish(): Boolean {
+    val englishPattern = Regex("^[a-zA-Z\\s]+$")
+    return englishPattern.matches(this)
+}
