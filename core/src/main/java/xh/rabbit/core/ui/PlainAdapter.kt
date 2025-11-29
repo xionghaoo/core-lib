@@ -1,6 +1,7 @@
 package xh.rabbit.core.ui
 
 import android.annotation.SuppressLint
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -29,7 +30,13 @@ abstract class PlainAdapter<T>(
         val v = holder.itemView
         listener?.let { click ->
             (clickView(v) ?: v).setDebouncedClickListener {
-                click(item, position)
+                if (position != selection) {
+                    notifySelection(position)
+                    click(item, position)
+                } else {
+                    Log.i(TAG, "same click")
+                }
+
             }
         }
         bindView(v, item, position)
@@ -60,7 +67,20 @@ abstract class PlainAdapter<T>(
 
     abstract fun bindView(v: View, item: T, position: Int)
 
+    fun select(index: Int) {
+        notifySelection(index)
+    }
+
+    fun unselect() {
+        notifyItemChanged(selection)
+        selection = -1
+    }
+
     fun setOnItemClickListener(onClick: (T, Int) -> Unit) {
         listener = onClick
+    }
+
+    companion object {
+        const val TAG = "PlainAdapter"
     }
 }

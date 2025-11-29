@@ -44,6 +44,7 @@ dependencies {
     implementation libs.fragment.ktx
     implementation libs.navigation.fragment
     implementation libs.navigation.ui
+    implementation "androidx.recyclerview:recyclerview:1.4.0"
 
     implementation libs.androidx.constraintlayout
     implementation 'com.beust:klaxon:5.5'

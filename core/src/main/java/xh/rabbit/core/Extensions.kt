@@ -297,3 +297,18 @@ fun String.isEnglish(): Boolean {
     val englishPattern = Regex("^[a-zA-Z\\s]+$")
     return englishPattern.matches(this)
 }
+
+fun detectLanguage(text: String): String {
+    val chinesePattern = Regex("[\u4e00-\u9fff]")
+    val englishPattern = Regex("[a-zA-Z]")
+
+    val hasChinese = chinesePattern.containsMatchIn(text)
+    val hasEnglish = englishPattern.containsMatchIn(text)
+
+    return when {
+        hasChinese && hasEnglish -> "混合"
+        hasChinese -> "中文"
+        hasEnglish -> "英文"
+        else -> "其他"
+    }
+}
