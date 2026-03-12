@@ -13,7 +13,7 @@ abstract class PlainAdapter<T>(
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     private var listener: ((T, Int) -> Unit)? = null
-
+    private var ignoreRepeatClick = true
     var selection = 0
 
     private class ItemViewHolder(v: View) : RecyclerView.ViewHolder(v)
@@ -30,13 +30,17 @@ abstract class PlainAdapter<T>(
         val v = holder.itemView
         listener?.let { click ->
             (clickView(v) ?: v).setDebouncedClickListener {
-                if (position != selection) {
+                if (ignoreRepeatClick) {
+                    if (position != selection) {
+                        notifySelection(position)
+                        click(item, position)
+                    } else {
+                        Log.i(TAG, "repeat click")
+                    }
+                } else {
                     notifySelection(position)
                     click(item, position)
-                } else {
-                    Log.i(TAG, "same click")
                 }
-
             }
         }
         bindView(v, item, position)
@@ -76,8 +80,9 @@ abstract class PlainAdapter<T>(
         selection = -1
     }
 
-    fun setOnItemClickListener(onClick: (T, Int) -> Unit) {
+    fun setOnItemClickListener(ignoreRepeatClick: Boolean = true, onClick: (T, Int) -> Unit) {
         listener = onClick
+        this.ignoreRepeatClick = ignoreRepeatClick
     }
 
     companion object {
